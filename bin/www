@@ -44,98 +44,100 @@ mongo.connect('mongodb://127.0.0.1/chat', function(err, db) {
 
 //////////////////////////////////////////////////////////////
 ////////////// socket.io 이벤트 처리
-
-
-
+  var rooms = [];
 
   io.on('connection', function(socket) {
 
+    //////////////////////////////////////////////////////////
+    ////// room version
+
+
+    socket.on('join room', function(data) {
+
+      socket.join(data.room);
+      console.log(data.room + ' : ' + data.sender + "입장했습니다.");
+
+      io.to(data.room).emit('new user');
+
+    });
+
+
+    //////////////////////////////////////////////////////////
 
     //mongodb collection
     var col = db.collection('messages');
-
-
-    //현재 상태 메시지를 보내는 함수
-    var sendStatus = function(statusMsg) {
-      socket.emit('status', statusMsg);
-    };
 
 
     // get : 클라이언트 최초로딩시 요청되는 이벤트
     // data.sender, data.receiver 통해 쿼리
     socket.on('get', function(data) {
 
-      //find 쿼리 ((sender / receiver) || (receiver / sender ) )
+      console.log(data.room);
+      //find 쿼리 ( room )
       col.find(
         {
-          $or: [
-            {
-              $and: [
-                {receiver: data.receiver},
-                {sender: data.sender}
-              ]
-            },
-            {
-              $and: [
-                {receiver: data.sender},
-                {sender: data.receiver}
-              ]
-            }
-          ]
+          room: data.room
+
         }
-      ).sort({_id: 1}).toArray(function(err, res) {
+      ).sort(
+        {_id: 1}
+      ).toArray(function(err, res) {
 
           if(err) throw err;
           //output 이벤트로 클라이언트에 쿼리
           socket.emit('output', res);
+
         });
 
     });
-
 
 
     // input : 클라이언트가 체팅 내용 입력시 이벤트
     // data.sender, data.receiver, data.message를 인자로 받음
     socket.on('input', function(data) {
-      console.log("sender : " + data.sender);
+
+      console.log("input : " + data.sender);
+
+      var room = data.room;
       var sender = data.sender;
-      var receiver = data.receiver;
       var message = data.message;
-      data.isread = "read"; // 읽음으로 표시해줌
 
       // 공백문자 처리
       var whitespacePattern = /^\s*$/;
 
       if(whitespacePattern.test(sender) ||
-        whitespacePattern.test(receiver) ||
         whitespacePattern.test(message)) {
+
         console.log("not inserted");
-        sendStatus('Name and message is required');
+
       } else {
         var date = new Date();
-        col.insert({receiver: receiver, sender: sender, message: message, date: date, read: 1}, function() {
-          //Emit latest messages to all clients
+        col.insert(
+          {
+            room: room,
+            sender: sender,
+            message: message,
+            date: date,
+            read: 1
+          }, function() {
 
-          //받은 내용을 다른 클라이언트에게 다시전송
-          //TODO : io.sockets.socket(socket_id).emit로 개별 메시지 보내기
-          io.emit('output', [data]);
+            //Emit latest messages to all clients
+            //받은 내용을 다른 클라이언트에게 다시전송
+            io.to(data.room).emit('output', [data]);
 
-          sendStatus({
-            message: "Message sent",
-            clear: true
           });
-        });
       }
     });
 
 
     //개별 메시지에 읽음 이벤트 발생시 db.messages.read 값을 0으로 update
-    socket.on('read', function(data) {
 
+    socket.on('read', function(data) {
 
       var ObjectId = require('mongodb').ObjectID;
 
       console.log("on read : " + new ObjectId(data._id));
+
       col.update({_id: new ObjectId(data._id)}, {$set: {read: 0}});
 
 
@@ -146,8 +148,8 @@ mongo.connect('mongodb://127.0.0.1/chat', function(err, db) {
     // 다시 readall이벤트를 발생시켜 읽었음 처리
     socket.on('readme', function(data) {
 
-      //TODO : io.sockets.socket(socket_id).emit로 개별 메시지 보내기
-      socket.broadcast.emit('readall', data);
+
+      socket.in(data.room).emit('readall', data);
 
     });
   });

@@ -1,1 +1,30 @@
-<!DOCTYPE html><html><head><meta charset="text/html; charset=utf-8" http-equiv="Content-Type"><meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1"><title>Chat</title><link rel="stylesheet" href="stylesheets/main.css"><script type="text/javascript" src="/javascripts/lib/jquery-1.11.0.min.js"></script><!--script(type="text/javascript" src="/javascripts/lib/jquery.mobile-1.4.5.min.js")--></head><body><div id="chat-wrap" class="chat-wrap"><div class="name"><input tabindex="text" id="sender-name" class="chat-name"><input tabindex="text" id="receiver-name" class="chat-name"></div><div class="chat-message-wrap"><div id="chat-message-id" class="chat-messages"></div></div><div id="chat-textarea-wrap" class="chat-textarea-wrap"><textarea id="chat-textarea" cols="2" rows="1" , user-scalable="0" class="chat-textarea"></textarea></div><div class="chat-status">Status:<span>Idle</span></div><script type="text/javascript" src="http://52.68.38.24/socket.io/socket.io.js"></script><script type="text/javascript" src="/javascripts/lib/jquery.form.min.js"></script><script type="text/javascript" src="/javascripts/lib/jquery.lazyload.min.js"></script><script type="text/javascript" src="/javascripts/lib/modernizr_2.8.3.min.js"></script><script type="text/javascript" src="/javascripts/lib/owl.carousel.min.js"></script><script type="text/javascript" src="/javascripts/lib/util.js"></script><script type="text/javascript" src="/javascripts/chat.js"></script></div></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>Chat</title>
+    <link rel="stylesheet" href="stylesheets/main.css">
+    <script type="text/javascript" src="/javascripts/lib/jquery-1.11.0.min.js"></script>
+    <!--script(type="text/javascript" src="/javascripts/lib/jquery.mobile-1.4.5.min.js")--></head>
+<body>
+<div id="chat-wrap" class="chat-wrap">
+    <div class="name"><input tabindex="text" id="room-name" class="chat-name"><input tabindex="text" id="sender-name"
+                                                                                     class="chat-name"></div>
+    <div class="chat-message-wrap">
+        <div id="chat-message-id" class="chat-messages"></div>
+    </div>
+    <div id="chat-textarea-wrap" class="chat-textarea-wrap"><textarea id="chat-textarea" cols="2" rows="1" ,
+                                                                      user-scalable="0"
+                                                                      class="chat-textarea"></textarea></div>
+    <div class="chat-status">Status:<span>Idle</span></div>
+    <script type="text/javascript" src="http://52.68.38.24/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/jquery.form.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/jquery.lazyload.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/modernizr_2.8.3.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/owl.carousel.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/util.js"></script>
+    <script type="text/javascript" src="/javascripts/chat.js"></script>
+</div>
+</body>
+</html>

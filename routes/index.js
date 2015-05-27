@@ -6,10 +6,23 @@ router.get('/', function(req, res, next) {
 
   res.render('index',
     {
-      receiver : req.query.receiver ,
-      sender : req.query.sender
+      sender: req.query.sender,
+      room: req.query.room
     }
   );
 });
+
+
+router.get('/:room', function(req, res, next) {
+
+  res.render('index',
+    {
+
+      room: req.params.room,
+      me: req.query.me
+    }
+  );
+});
+
 
 module.exports = router;
