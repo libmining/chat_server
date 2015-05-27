@@ -39,41 +39,40 @@ server.on('listening', onListening);
 
 //////////////////////////////////////////////////////////////
 ////////////// 몽고 db 연결
+
 mongo.connect('mongodb://127.0.0.1/chat', function(err, db) {
   if(err) throw err;
 
+
 //////////////////////////////////////////////////////////////
 ////////////// socket.io 이벤트 처리
-  var rooms = [];
 
   io.on('connection', function(socket) {
 
-    //////////////////////////////////////////////////////////
-    ////// room version
 
 
+    // join room : 클라이언트 최초접속시 room에 연결
+    // data.room, data.sender
     socket.on('join room', function(data) {
 
       socket.join(data.room);
       console.log(data.room + ' : ' + data.sender + "입장했습니다.");
 
-      io.to(data.room).emit('new user');
+      //io.to(data.room).emit('new user');
 
     });
 
-
-    //////////////////////////////////////////////////////////
 
     //mongodb collection
     var col = db.collection('messages');
 
 
     // get : 클라이언트 최초로딩시 요청되는 이벤트
-    // data.sender, data.receiver 통해 쿼리
+    // data.room, data.sender 통해 쿼리
     socket.on('get', function(data) {
 
-      console.log(data.room);
-      //find 쿼리 ( room )
+
+      //find 쿼리 : room을 통해 데이터 검색
       col.find(
         {
           room: data.room
@@ -84,7 +83,9 @@ mongo.connect('mongodb://127.0.0.1/chat', function(err, db) {
       ).toArray(function(err, res) {
 
           if(err) throw err;
-          //output 이벤트로 클라이언트에 쿼리
+
+          // output : 검색결과(res)객체를 클라이언트에게 전송
+          // res.sender, res.message, res.read, res.date,
           socket.emit('output', res);
 
         });
@@ -92,26 +93,27 @@ mongo.connect('mongodb://127.0.0.1/chat', function(err, db) {
     });
 
 
-    // input : 클라이언트가 체팅 내용 입력시 이벤트
-    // data.sender, data.receiver, data.message를 인자로 받음
+    // input : 클라이언트가 체팅내용 입력
+    // data.room, data.sender, data.message
     socket.on('input', function(data) {
-
-      console.log("input : " + data.sender);
 
       var room = data.room;
       var sender = data.sender;
       var message = data.message;
 
-      // 공백문자 처리
+
       var whitespacePattern = /^\s*$/;
 
+      // 공백문자 처리
       if(whitespacePattern.test(sender) ||
         whitespacePattern.test(message)) {
 
-        console.log("not inserted");
+        console.log("whitespacePattern");
 
       } else {
         var date = new Date();
+
+        //insert 쿼리 : room, sender, message, date, read 입력
         col.insert(
           {
             room: room,
@@ -121,8 +123,7 @@ mongo.connect('mongodb://127.0.0.1/chat', function(err, db) {
             read: 1
           }, function() {
 
-            //Emit latest messages to all clients
-            //받은 내용을 다른 클라이언트에게 다시전송
+            //콜백으로 받은 내용을 다른 클라이언트에게 다시전송
             io.to(data.room).emit('output', [data]);
 
           });
@@ -131,23 +132,21 @@ mongo.connect('mongodb://127.0.0.1/chat', function(err, db) {
 
 
     //개별 메시지에 읽음 이벤트 발생시 db.messages.read 값을 0으로 update
-
     socket.on('read', function(data) {
 
       var ObjectId = require('mongodb').ObjectID;
 
       console.log("on read : " + new ObjectId(data._id));
 
+      //insert 쿼리 : 해당 _id를 받아서 read를 0으로
       col.update({_id: new ObjectId(data._id)}, {$set: {read: 0}});
 
 
     });
 
 
-    // output 이벤트에 대하여 읽었음을 처리하기 위한 이벤트
-    // 다시 readall이벤트를 발생시켜 읽었음 처리
+    // 읽었을경우 readall로 읽었음을 알림
     socket.on('readme', function(data) {
-
 
       socket.in(data.room).emit('readall', data);
 
