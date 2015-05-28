@@ -17,7 +17,6 @@ var getNode = function(s) {
 }
 
 
-
 // 초기화 함수
 var init = function() {
 
@@ -31,7 +30,6 @@ var init = function() {
   $(".chat").css({"height": screenSize});
   $(".chat-messages").css({"height": _chat_messages_size});
   $(".chat-messages-wrap").css({"height": _chat_messages_size});
-
 
 
   // 모바일 브라우져일 경우 소프트웨어 키보드 움직임을 고려하여 딜레이를 줌
@@ -74,8 +72,8 @@ var init = function() {
   var statusNode = getNode('.chat-status span'); // 체팅 상태 노드
   var statusDefault = statusNode.innerHTML;     // 현제 체팅 상태 노드
   var messagesVar = getNode('.chat-messages'); //체팅이 보이는 노드
-  console.log("room : "+ room);
-  console.log("sender : "+ sender);
+  console.log("room : " + room);
+  console.log("sender : " + sender);
 
   /////////////////////////////////////////////////////////////////
   ////////////////////// socket.io 연결 시작
@@ -147,28 +145,34 @@ var init = function() {
           messageText.innerText = data[x].message;
           messageName.innerText = data[x].sender;
 
-          if(data[x].read === 1){
+          if(data[x].read === 1) {
             console.log('안읽음');
             messageRead.innerText = '안읽음';
-          } else{
+          } else {
             console.log('읽음');
             messageRead.innerText = '';
           }
 
           // 12시간 단위로 표시
           var myGetHour = (new Date(data[x].date).getHours() );
-          if(myGetHour > 12) {
+          console.log('myGetHour ' + myGetHour);
+
+          if(myGetHour > 13) {
             myGetHour = myGetHour - 12;
+          }
+
+          if(myGetHour === 0) {
+            myGetHour = 12;
           }
 
 
           messageDate.innerText = myGetHour + "시 " + new Date(data[x].date).getMinutes() + "분";
 
 
-          console.log('data[x].read : '+ data[x].read);
+          console.log('data[x].read : ' + data[x].read);
           var chatDate = new Date(data[x].date);
           var currentDate = (new Date());
-          var weekday = ["월요일","화요일","수요일","목요일","금요일","토요일","일요일"];
+          var weekday = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"];
 
           //// 채팅 날짜가 변경될경우 날짜 변경 줄을 추가
           // 마지막 데이터가 아닌경우
@@ -200,14 +204,12 @@ var init = function() {
             messageRead.setAttribute('class', 'sender-read');
 
 
-
             messageState.appendChild(messageRead);
             messageState.appendChild(messageDate);
             message.appendChild(messageState);
             message.appendChild(messageText);
             messagesVar.appendChild(message);
             messagesVar.appendChild(message, messagesVar.firstChild);
-
 
 
           } else { //다른사람이 쓴 메시지인 경우 왼쪽 편에 보이도록
@@ -232,7 +234,7 @@ var init = function() {
             messagesVar.appendChild(message);
             messagesVar.appendChild(message, messagesVar.firstChild);
 
-            console.log('data[x]._id : '+ data[x]._id);
+            console.log('data[x]._id : ' + data[x]._id);
             //해당 메시지가 안읽음일 경우 서버에 알림
             if(data[x].read === 1) {
               console.log('emit read');
