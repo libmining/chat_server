@@ -146,7 +146,14 @@ var init = function() {
 
           messageText.innerText = data[x].message;
           messageName.innerText = data[x].sender;
-          messageRead.innerText = "안읽음";
+
+          if(data[x].read === 1){
+            console.log('안읽음');
+            messageRead.innerText = '안읽음';
+          } else{
+            console.log('읽음');
+            messageRead.innerText = '';
+          }
 
           // 12시간 단위로 표시
           var myGetHour = (new Date(data[x].date).getHours() );
@@ -158,7 +165,7 @@ var init = function() {
           messageDate.innerText = myGetHour + "시 " + new Date(data[x].date).getMinutes() + "분";
 
 
-
+          console.log('data[x].read : '+ data[x].read);
           var chatDate = new Date(data[x].date);
           var currentDate = (new Date());
           var weekday = ["월요일","화요일","수요일","목요일","금요일","토요일","일요일"];
@@ -202,6 +209,7 @@ var init = function() {
             messagesVar.appendChild(message, messagesVar.firstChild);
 
 
+
           } else { //다른사람이 쓴 메시지인 경우 왼쪽 편에 보이도록
 
             if(data[x].read === 0) {
@@ -224,9 +232,10 @@ var init = function() {
             messagesVar.appendChild(message);
             messagesVar.appendChild(message, messagesVar.firstChild);
 
-
+            console.log('data[x]._id : '+ data[x]._id);
             //해당 메시지가 안읽음일 경우 서버에 알림
             if(data[x].read === 1) {
+              console.log('emit read');
 
               socket.emit('read',
                 {
@@ -323,6 +332,7 @@ var init = function() {
             room: room,
             sender: sender,
             message: self.value,
+            read: 1,
             date: new Date()
           });
         event.preventDefault();

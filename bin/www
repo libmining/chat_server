@@ -121,8 +121,11 @@ mongo.connect('mongodb://127.0.0.1/chat', function(err, db) {
             message: message,
             date: date,
             read: 1
-          }, function() {
+          }, function(err, result) {
 
+            var ObjectId = require('mongodb').ObjectID;
+            console.log('result._id : '+ result.ops[0]._id);
+            data._id = result.ops[0]._id;
             //콜백으로 받은 내용을 다른 클라이언트에게 다시전송
             io.to(data.room).emit('output', [data]);
 
