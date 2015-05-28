@@ -16,11 +16,11 @@
 ## 사용법
 
 #### 1. url파라미터로 방이름과 사용자명으로 접속 
-     room1(http://52.68.38.24/room1?sender=user1)
+http://52.68.38.24/room1?sender=user1
 #### 2. 함께 채팅을 하고 싶다면 같은 방으로 접속 
-     room2(http://52.68.38.24/room1?sender=user2)
+http://52.68.38.24/room1?sender=user2
 #### 3. 새로운 방을 접소하고 싶다면 새로운 방에접속 
-     room3(http://52.68.38.24/room2?sender=user3)
+http://52.68.38.24/room2?sender=user3
 
 
 
