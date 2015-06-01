@@ -15,13 +15,12 @@
 
 ## 사용법
 
-#### 1. url파라미터로 방이름과 사용자명으로 접속 
-http://52.68.38.24/room1?sender=판매자
-#### 2. 함께 채팅을 하고 싶다면 같은 방으로 접속 
-http://52.68.38.24/room1?sender=구매자
-#### 3. 새로운 방을 만들고 싶다면 room이름을 변경하여 접속 
-http://52.68.38.24/room2?sender=user3
-
+#### 1. 서버환경 셋팅
+node.js, mongodb설치
+#### 2. 소스코드를 복사한다
+node.js + express 프로젝트
+public/javascripts/chat.js의 서버ip 혹을 도메인을 바꿔준다.
+#### 3. 실행을 한다.
 
 
 ## 개발기
