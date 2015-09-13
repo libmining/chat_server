@@ -1,6 +1,5 @@
 # chat_server
 
-
 ## 프로그램 설명
      node.js와 socket.io를 이용한 체팅 프로그램
      - 1:1, 1:N 채팅 가능
@@ -23,6 +22,6 @@ public/javascripts/chat.js의 서버ip 혹을 도메인을 바꿔준다.
 #### 3. 실행을 한다.
 
 
-## 개발기
+## 개발
 
-네이버블로그(http://liange.blog.me/220370557524)
+큐핏 www.myqufit.com
