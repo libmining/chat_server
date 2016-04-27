@@ -24,4 +24,4 @@ public/javascripts/chat.js의 서버ip 혹을 도메인을 바꿔준다.
 
 ## 개발
 
-큐핏 www.myqufit.com
+snowhole@gmail.com
