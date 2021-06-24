@@ -20,8 +20,3 @@ node.js, mongodb설치
 node.js + express 프로젝트
 public/javascripts/chat.js의 서버ip 혹을 도메인을 바꿔준다.
 #### 3. 실행을 한다.
-
-
-## 개발
-
-snowhole@gmail.com
